@@ -96,11 +96,7 @@ def next_best_step(args,lr = 0.1,toaster = 1):
                 a= (
                         args[0] + arg1,
                         args[1] + arg2,
-<<<<<<< HEAD
                         args[2] + arg3 * lr
-=======
-                        args[2] + arg3*lr
->>>>>>> 4422dbc (add verbose to toaster optimisation)
                     )
                 try:
                     val  = utility(*a,toaster=toaster)
@@ -114,11 +110,7 @@ def next_best_step(args,lr = 0.1,toaster = 1):
     
     return max_arg,finished
 
-<<<<<<< HEAD
 def find_max_extreme(toaster = 1, verbose = 0):
-=======
-def find_max_extreme(toaster = 1,verbose = 0):
->>>>>>> 4422dbc (add verbose to toaster optimisation)
     params = random_args()
 
     finished = False
@@ -127,15 +119,8 @@ def find_max_extreme(toaster = 1,verbose = 0):
 
     while not finished:
         params,finished = next_best_step(params,lr,toaster)
-<<<<<<< HEAD
         if verbose:
             print(f"Score: {np.round(utility(*params,toaster=toaster),10)} with params: {params}")  
-=======
-
-        if verbose:
-            print(f"Score {utility(*params)} for params {params}")
-
->>>>>>> 4422dbc (add verbose to toaster optimisation)
         if finished and lr > 1e-10:
             lr *=0.1
             finished = False
@@ -145,7 +130,6 @@ def find_max_extreme(toaster = 1,verbose = 0):
 
 find_max_extreme(verbose=1)
 
-<<<<<<< HEAD
 best_toaster = None
 best_val = None
 best_params = None
@@ -157,25 +141,12 @@ for toaster in range(1,11):
     for i in range(200):
         optimum = find_max_extreme()
         val = utility(*optimum,toaster=toaster)
-=======
-# for toaster in range(1,11):
-
-#     res = {}
-
-#     for i in range(400):
-#         optimum = find_max_extreme(verbose=1)
-#         res[optimum] = utility(*optimum,toaster=toaster)
->>>>>>> 4422dbc (add verbose to toaster optimisation)
 
         if best_val is None or val > best_val:
             best_toaster = toaster
             best_val = val
             best_params = optimum
 
-<<<<<<< HEAD
     print(f"Best score so far: Score: {best_val} with toaster: {best_toaster} and params: {best_params}")
 print(f"Score: {best_val} with toaster: {best_toaster} and params: {best_params}")
 #Score: 2740.9903781640137 with toaster: 9 and params: (1, 100, 0.055522069999999965)
-=======
-#     [print("Toaster",toaster,i) for i in res.items()]
->>>>>>> 4422dbc (add verbose to toaster optimisation)

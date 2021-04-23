@@ -96,7 +96,7 @@ def next_best_step(args,lr = 0.1,toaster = 1):
                 a= (
                         args[0] + arg1,
                         args[1] + arg2,
-                        args[2] + arg3
+                        args[2] + arg3 * lr
                     )
                 try:
                     val  = utility(*a,toaster=toaster)
@@ -110,7 +110,7 @@ def next_best_step(args,lr = 0.1,toaster = 1):
     
     return max_arg,finished
 
-def find_max_extreme(toaster = 1):
+def find_max_extreme(toaster = 1, verbose = 0):
     params = random_args()
 
     finished = False
@@ -119,21 +119,33 @@ def find_max_extreme(toaster = 1):
 
     while not finished:
         params,finished = next_best_step(params,lr,toaster)
-
+        if verbose:
+            print(f"Score: {np.round(utility(*params,toaster=toaster),10)} with params: {params}")  
         if finished and lr > 1e-10:
             lr *=0.1
             finished = False
+             
 
     return params
 
 
+best_toaster = None
+best_val = None
+best_params = None
+
+optimum = find_max_extreme(verbose=1)
+
 for toaster in range(1,11):
-
-    res = {}
-
-    for i in range(400):
+    print(f"Checking toaster: {toaster}")
+    for i in range(200):
         optimum = find_max_extreme()
-        res[optimum] = utility(*optimum,toaster=toaster)
+        val = utility(*optimum,toaster=toaster)
 
+        if best_val is None or val > best_val:
+            best_toaster = toaster
+            best_val = val
+            best_params = optimum
 
-    [print("Toaster",toaster,i) for i in res.items()]
+    print(f"Best score so far: Score: {best_val} with toaster: {best_toaster} and params: {best_params}")
+print(f"Score: {best_val} with toaster: {best_toaster} and params: {best_params}")
+#Score: 2740.9903781640137 with toaster: 9 and params: (1, 100, 0.055522069999999965)

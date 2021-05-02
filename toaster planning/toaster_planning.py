@@ -100,7 +100,7 @@ def state_transition(state, action):
 # 3) Implement a function that fulfills 2) and is as fast as possible!
 ###################################################
 def plan(start_state):
-    return bfs2(start_state)
+    return BFS_stage_managed(start_state)
 
 
 def bfs(state):
@@ -116,37 +116,47 @@ def bfs(state):
                 return sas
             states_actions.append((n_state,sas))
 
-class State:
-    def __init__(self,state,path = []) -> None:
-        self.repr = (state['bread_state'],state['bread_location'],state['toaster_is_on'],state['toaster_has_power'])
-        self.path = path
-        self._state = state
-        self.time = state["time"]
-        self.goal = goal(state)
 
-    def state_trans(self,action):
-        return State(state_transition(self._state,action),self.path + [action])
 
-def bfs2(state):
+def BFS_stage_managed(state):
+    class State:
+        def __init__(self,state,path = []) -> None:
+            self.key = (state['bread_state'],state['bread_location'],state['toaster_is_on'],state['toaster_has_power'])
+            self.path = path
+            self._state = state
+            self.time = state["time"]
+            self.goal = goal(state)
+
+        def state_trans(self,action):
+            return State(state_transition(self._state,action),self.path + [action])
+
     state = State(state)
-    visited_states = {state.repr:state}
+    visited_states = {state.key:state}
     goal_states = []
-    new_states = [state]
+    frontier_states = [state]
 
-    while len(new_states):
-        s = new_states.pop(0)
+    while len(frontier_states): #Iterate as long as there are states in the list. This works since known states are ignored
+        s = frontier_states.pop(0)
+
+        #Iterate over all possible actions and check if they either result in a better state or are unknown
         for action in actions:
             new_state = s.state_trans(action)
 
-            if new_state.goal:
+            if new_state.goal: #If the goal is reached, the state is saved to a list
                 goal_states.append(new_state)
-            elif new_state.repr not in visited_states or new_state.time < visited_states[new_state.repr].time:
-                visited_states[new_state.repr] = new_state
-                new_states.append(new_state)
+
+            elif (
+                new_state.key not in visited_states #Checks if "new_state" was seen before
+                or new_state.time < visited_states[new_state.key].time #If the state was seen before, it is checked if "new_state" has less time
+                ):
+                visited_states[new_state.key] = new_state #The old state is overwritten with "new_state"
+                frontier_states.append(new_state) #New state is added to "new_states" again because it might result in a quicker way to the goal
 
     best_state = None    
+
+    print("\t All found goal paths:")
     for s in goal_states:
-        print(s.path,s.time)
+        print("\t\t",s.path,s.time)
         if not best_state or best_state.time > s.time:
             best_state = s
 

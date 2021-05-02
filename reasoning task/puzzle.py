@@ -108,11 +108,12 @@ Implication(And(Not(AKnight), CKnave), Or(BKnight, CKnight))
 
 # TODO: understand how knowledge 0 models this condition.
 
+general_knowledge = [Biconditional(AKnight, Not(AKnave)),
+    Biconditional(BKnave, Not(BKnight))]
+    
+
 knowledge0 = And(
-    # Iff A is a knight they cannot be a knave
-    Biconditional(AKnight, Not(AKnave)),
-    # iff A is a knave they cannot be a knight
-    Biconditional(AKnave, Not(AKnight)),
+    *general_knowledge,
     # if the statement is true, A is a knight.
     Biconditional(AKnight, And(AKnave, AKnight))
 )
@@ -125,9 +126,7 @@ knowledge0 = And(
 # TODO: Define knowledge1
 
 knowledge1 = And(
-    # Iff A is a knight they cannot be a knave
-    Biconditional(AKnight,Not(AKnave)),
-    Biconditional(BKnight,Not(BKnave)),
+    *general_knowledge,
     Biconditional(AKnight,And(AKnave,BKnave))
 )
 
@@ -139,10 +138,7 @@ knowledge1 = And(
 # TODO: Define knowledge2
 
 knowledge2 = And(
-    Biconditional(AKnight,Not(AKnave)),
-    Biconditional(BKnight,Not(BKnave)),
-    # Implication(AKnight,BKnight),
-    # Implication(BKnight,Not(AKnight))
+    *general_knowledge,
     Biconditional(AKnight,Or(And(AKnight,BKnight),And(AKnave,BKnave))),
     Biconditional(BKnight,Or(And(AKnight,BKnave),And(AKnave,BKnight)))
 )

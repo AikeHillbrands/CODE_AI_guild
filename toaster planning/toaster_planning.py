@@ -147,10 +147,10 @@ def BFS_stage_managed(state):
 
             elif (
                 new_state.key not in visited_states #Checks if "new_state" was seen before
-                or new_state.time < visited_states[new_state.key].time #If the state was seen before, it is checked if "new_state" has less time
-                ):
-                visited_states[new_state.key] = new_state #The old state is overwritten with "new_state"
-                frontier_states.append(new_state) #New state is added to "new_states" again because it might result in a quicker way to the goal
+                or new_state.time < visited_states[new_state.key].time): #If the state was seen before, it is checked if "new_state" has less time
+                
+                visited_states[new_state.key] = new_state #The the new state is added to "visited_states" or the old state is overwritten with "new_state"
+                frontier_states.append(new_state) #New state is added to "new_states" again because it is either new or might result in a quicker way to the goal
 
     best_state = None    
 
